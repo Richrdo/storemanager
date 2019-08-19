@@ -24,25 +24,33 @@
             android:id="@+id/rbtn_commodity"
             style="@style/Custom.TabRadioButton"
             android:checked="true"
-            android:drawableTop=""
-            android:text="上新" />
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/news_selector"
+            android:text="上新"/>
 
         <RadioButton
             android:id="@+id/rbtn_controller"
             style="@style/Custom.TabRadioButton"
-            android:drawableTop=""
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:drawableTop="@drawable/controller_selector"
             android:text="商品管理" />
 
         <RadioButton
-            android:id="@+id/rbtn_basket"
+            android:id="@+id/rbtn_orders"
             style="@style/Custom.TabRadioButton"
-            android:drawableTop=""
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:drawableTop="@drawable/order_selector"
             android:text="订单" />
 
         <RadioButton
-            android:id="@+id/rbtn_user"
+            android:id="@+id/rbtn_manager"
             style="@style/Custom.TabRadioButton"
-            android:drawableTop=""
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:drawableTop="@drawable/managers_selector"
             android:text="管理员" />
 
     </RadioGroup>
