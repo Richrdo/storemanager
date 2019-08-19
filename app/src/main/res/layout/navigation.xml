@@ -1,0 +1,50 @@
+<?xml version='1.0' encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/fragment_vp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tabs_rg"
+        android:layout_marginBottom="0dp" />
+
+    <RadioGroup
+        android:id="@+id/tabs_rg"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        android:background="#dcdcdc"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbtn_commodity"
+            style="@style/Custom.TabRadioButton"
+            android:checked="true"
+            android:drawableTop=""
+            android:text="上新" />
+
+        <RadioButton
+            android:id="@+id/rbtn_controller"
+            style="@style/Custom.TabRadioButton"
+            android:drawableTop=""
+            android:text="商品管理" />
+
+        <RadioButton
+            android:id="@+id/rbtn_basket"
+            style="@style/Custom.TabRadioButton"
+            android:drawableTop=""
+            android:text="订单" />
+
+        <RadioButton
+            android:id="@+id/rbtn_user"
+            style="@style/Custom.TabRadioButton"
+            android:drawableTop=""
+            android:text="管理员" />
+
+    </RadioGroup>
+
+</RelativeLayout>
