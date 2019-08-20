@@ -16,16 +16,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Checkout {
     static int stateCode=-1;
 
-    public static boolean isMatch(String id,String psw){
+    public static boolean isMatch(String ori_url){
         Thread conn=new Thread(new Runnable() {
             @Override
             public void run() {
-
-                String ori_url = "http://47.106.177.200:8080/store/manager?id=" + id + "&psw=" + psw;
                 try {
                     URL url = new URL(ori_url);
 
@@ -53,11 +53,16 @@ public class Checkout {
                         //获取返回的数据
                         String result = streamToString(urlConnection.getInputStream());
                         //解析JSON
-                        JSONObject jsonObject = new JSONObject(result);
-                        stateCode = jsonObject.getInt("code");
-                        final String msg = jsonObject.getString("msg");
-
-                        Log.e("MYTAG", "获取json成功，json="+result);
+                        Pattern p=Pattern.compile(".*manager.*");
+                        Matcher m=p.matcher(ori_url);
+                        if (m.matches()){
+                            JSONObject jsonObject = new JSONObject(result);
+                            stateCode = jsonObject.getInt("code");
+                            final String msg = jsonObject.getString("msg");
+                            Log.e("MYTAG", "获取json成功，json="+result);
+                        }else{
+                            Log.e("MYTAG", " 无需获取json" );
+                        }
                     }
 
                 } catch (IOException | JSONException e) {

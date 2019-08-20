@@ -77,7 +77,8 @@ public class LoginPage extends AppCompatActivity {
             Toast.makeText(LoginPage.this,"请输入密码",Toast.LENGTH_SHORT).show();
         }else {
             //调用service的checkout方法来验证身份
-            if (Checkout.isMatch(id,psw)){
+            String ori_url = "http://47.106.177.200:8080/store/manager?id=" + id + "&psw=" + psw;
+            if (Checkout.isMatch(ori_url)){
                 saveCookie(Integer.valueOf(id),psw);
                 Toast.makeText(LoginPage.this,"欢迎，管理员 "+id+"号",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(LoginPage.this, HomePage.class);

@@ -5,11 +5,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Commodity implements Serializable {
-    private int imageId;
+    private String imagePath;
     private String commodityName;
     private String describe;
     private double price;
-    private GoodsType type;
+    private String type;
     private String groundDate;
     private int id;
 
@@ -27,12 +27,12 @@ public class Commodity implements Serializable {
         groundDate=dateFormat.format(date);
     }
 
-    public int getImageId() {
-        return imageId;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public String getCommodityName() {
@@ -59,11 +59,11 @@ public class Commodity implements Serializable {
         this.price = price;
     }
 
-    public GoodsType getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(GoodsType type) {
+    public void setType(String type) {
         this.type = type;
     }
 

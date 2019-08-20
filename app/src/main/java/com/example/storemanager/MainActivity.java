@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         psw=preferences.getString("password","");
 
         Log.e("MYTAG", "从内存获取id为"+id+" ,password为"+psw );
-
-        if (id!=-1&&psw!=null&&Checkout.isMatch(String.valueOf(id),psw)){
+        String ori_url = "http://47.106.177.200:8080/store/manager?id=" + id + "&psw=" + psw;
+        if (id!=-1&&psw!=null&&Checkout.isMatch(ori_url)){
             Toast.makeText(MainActivity.this,"欢迎，管理员 "+id+"号",Toast.LENGTH_SHORT).show();
             Intent intent=new Intent(MainActivity.this, HomePage.class);
             startActivity(intent);
