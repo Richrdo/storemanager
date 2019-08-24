@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.storemanager.control.HomePage;
-import com.example.storemanager.control.LoginPage;
 
 import org.json.JSONException;
 import org.json.JSONObject;

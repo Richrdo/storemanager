@@ -22,9 +22,6 @@ public class Commodity implements Serializable {
     }
 
     public Commodity() {
-        Date date=new Date();
-        SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-mm-dd");
-        groundDate=dateFormat.format(date);
     }
 
     public String getImagePath() {
@@ -65,6 +62,10 @@ public class Commodity implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public void setGroundDate(String groundDate) {
+        this.groundDate = groundDate;
     }
 
     public String getGroundDate() {

@@ -50,7 +50,7 @@
         android:hint="请为商品添加商品描述" />
 
     <Button
-        android:id="@+id/submit_commodity"
+        android:id="@+id/submit_goods"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:text="商品上架"

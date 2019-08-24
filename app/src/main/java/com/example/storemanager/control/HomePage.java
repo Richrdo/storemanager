@@ -71,6 +71,7 @@ public class HomePage extends AppCompatActivity {
 
         fragments=new ArrayList<>(4);
         fragments.add(newsPage);
+        fragments.add(new CommodityControllerPage());
 
         adapters=new MyFragmentPageAdapter(getSupportFragmentManager(),fragments);
         mViewPager.setAdapter(adapters);

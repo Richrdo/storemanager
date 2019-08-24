@@ -70,7 +70,7 @@ public class NewsPage extends Fragment {
 
         //findView
         imageView=view.findViewById(R.id.goods_image);
-        btn_submit=view.findViewById(R.id.submit_commodity);
+        btn_submit=view.findViewById(R.id.submit_goods);
         name=view.findViewById(R.id.goods_name);
         price=view.findViewById(R.id.goods_price);
         goods_type=view.findViewById(R.id.goods_type);
