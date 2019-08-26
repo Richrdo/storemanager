@@ -5,7 +5,6 @@
 
     <ListView
         android:id="@+id/commodity_list_view"
-        android:layout_above="@id/flash_goods"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

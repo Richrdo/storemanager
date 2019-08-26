@@ -3,6 +3,7 @@ package com.example.storemanager.entity;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 public class Commodity implements Serializable {
     private String imagePath;
@@ -70,5 +71,18 @@ public class Commodity implements Serializable {
 
     public String getGroundDate() {
         return groundDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Commodity commodity = (Commodity) o;
+        return id == commodity.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

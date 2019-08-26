@@ -1,42 +1,51 @@
 package com.example.storemanager.control;
 
 import android.app.Activity;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.TextView;
+
 
 import androidx.fragment.app.Fragment;
 
 import com.example.storemanager.R;
 import com.example.storemanager.entity.Commodity;
+import com.example.storemanager.entity.StoreMap;
 import com.example.storemanager.service.CommodityAdapter;
 import com.example.storemanager.service.GetCommodity;
+import com.example.storemanager.service.PostChange;
 
+
+import java.io.File;
 import java.util.List;
-import java.util.Map;
+
+
 
 
 public class CommodityControllerPage extends Fragment {
 
-    CommodityAdapter adapter;
+    private CommodityAdapter adapter;
     private Activity mActivity;
-    ListView listView;
-    List<Commodity> commodities=null;
-    Button flash=null;
+    private ListView listView;
+    private List<Commodity> commodities=null;
+    private Button flash=null;
+    private SharedPreferences.Editor editor;
+
 
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
-
         mActivity=(Activity)context;
     }
 
@@ -52,7 +61,6 @@ public class CommodityControllerPage extends Fragment {
         listView=view.findViewById(R.id.commodity_list_view);
         flash=view.findViewById(R.id.flash_goods);
 
-//        initLocalCommodity();
 
         flash.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +71,41 @@ public class CommodityControllerPage extends Fragment {
                         initCommmodity(inflater);
                     }
                 }).start();
-                flash.setVisibility(View.GONE);
+//                flash.setVisibility(View.GONE);
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Commodity commodity=commodities.get(i);
+                Intent intent=new Intent(mActivity,EditCommodity.class);
+                intent.putExtra("click_commodity",commodity);
+                startActivity(intent);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                AlertDialog alert=builder.setIcon(R.mipmap.ic_launcher_round)
+                        .setTitle("提示")
+                        .setMessage("确认删除吗？！")
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Commodity commodity=commodities.get(position);
+                                Log.e("MYTAG", "你将删除"+commodity.getCommodityName());
+                                deleteItem(commodity);
+                            }
+                        }).create();
+                alert.show();
+                return true;
             }
         });
 
@@ -76,7 +118,7 @@ public class CommodityControllerPage extends Fragment {
             public void run() {
                 Log.e("MYTAG", "开启getCommodity" );
                commodities=GetCommodity.initCommodity("http://47.106.177.200:8080/store/get_commodity");
-                GetCommodity.downloadImage(commodities,mActivity);
+                GetCommodity.getImage(mActivity,commodities);
             }
         });
         thread.start();
@@ -95,7 +137,32 @@ public class CommodityControllerPage extends Fragment {
                 listView.setAdapter(adapter);
             }
         });
+    }
 
+    private void deleteItem(Commodity commodity){
+        int id=commodity.getId();
+        Thread  deleteFromServe=new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String url="http://47.106.177.200:8080/store/change?action=delete&id="+id;
+                new PostChange().doPost(url);
+                StoreMap.imageMap.remove(id);
+                commodities.remove(commodity);
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        });
+        deleteFromServe.start();
+        try{
+            deleteFromServe.join();
+            Thread.sleep(10);
+        }catch (InterruptedException e){
+            Log.e("MYTAG", e.getMessage());
+        }
     }
 
 }

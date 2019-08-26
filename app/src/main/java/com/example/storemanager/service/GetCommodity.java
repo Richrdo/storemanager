@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,32 +82,55 @@ public class GetCommodity {
         return commodities;
     }
 
-    public static void downloadImage(List<Commodity> commodities, Context context){
+    public static void downloadImage(Commodity commodity, Context context){
         String picPath=null;
-        for (Commodity commodity:commodities){
-            picPath=commodity.getImagePath();
-            try{
-                picPath="http://47.106.177.200:8080/store/image?path="+picPath;
-                InputStream inputStream=doGet(picPath,"application/json");
-                String savePath=context.getFilesDir()+"/goods_image/";
-                File file=new File(savePath);
-                if (!file.exists()){
-                    file.mkdir();
-                    Log.e("MYTAG", "文件创建成功！ " );
-                }
-                file=new File(savePath+commodity.getId()+".jpg");
-                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                Log.e("MYTAG", "bitmap获取成功" );
-                StoreMap.imageMap.put(commodity.getId(),bitmap);
-                FileOutputStream outputStream=new FileOutputStream(file);
-                Log.e("MYTAG", "file存储成功" );
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
-                outputStream.close();
+        picPath=commodity.getImagePath();
+        try{
+            picPath="http://47.106.177.200:8080/store/image?path="+picPath;
+            InputStream inputStream=doGet(picPath,"application/json");
+            String savePath=context.getFilesDir()+"/goods_image/";
+            File file=new File(savePath+commodity.getId()+".png");
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            Log.e("MYTAG", "bitmap获取成功" );
+            StoreMap.imageMap.put(commodity.getId(),bitmap);
+            FileOutputStream outputStream=new FileOutputStream(file);
+            Log.e("MYTAG", "file存储成功" );
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,outputStream);
+            outputStream.close();
 
-            }catch (IOException e){
-                Log.e("MYTAG", "读取图片失败，MESSAGE="+e.getMessage() );
-                e.printStackTrace();
+        }catch (IOException e){
+            Log.e("MYTAG", "读取图片失败，MESSAGE="+e.getMessage() );
+            e.printStackTrace();
+        }
+
+    }
+
+    public static  void getImage(Context context,List<Commodity> commodities){
+        String picPath=context.getFilesDir()+"/goods_image/";
+        try{
+            File file=new File(picPath);
+            if (!file.exists()){
+                file.mkdir();
+                Log.e(" MYTAG", "文件创建成功  " );
+                for (Commodity commodity:commodities){
+                    downloadImage(commodity ,context);
+                }
+            }else{
+                for (Commodity commodity:commodities){
+                    file=new File(picPath+commodity.getId()+".png");
+                    if (!file.exists()){
+                        Log.e("MYTAG", "开始获取网络图片" );
+                        downloadImage(commodity,context);
+                    }else{
+                        Log.e("MYTAG", "开始获取本地图片" );
+                        FileInputStream stream=new FileInputStream(file);
+                        Bitmap bitmap=BitmapFactory.decodeStream(stream);
+                        StoreMap.imageMap.put(commodity.getId(),bitmap);
+                    }
+                }
             }
+        }catch (FileNotFoundException e){
+            Log.e("mytag", "文件找不到 ，MESSAGE="+e.getMessage() );
         }
     }
 

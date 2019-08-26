@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.storemanager.R;
 import com.example.storemanager.service.Checkout;
+import com.example.storemanager.service.EditKeyListener;
 import com.example.storemanager.service.PostImage;
 
 import java.io.File;
@@ -75,6 +76,11 @@ public class NewsPage extends Fragment {
         price=view.findViewById(R.id.goods_price);
         goods_type=view.findViewById(R.id.goods_type);
         describe=view.findViewById(R.id.goods_describe);
+
+        name.setOnKeyListener(new EditKeyListener());
+        price.setOnKeyListener(new EditKeyListener());
+        goods_type.setOnKeyListener(new EditKeyListener());
+        describe.setOnKeyListener(new EditKeyListener());
 
         if (mActivity!=null){
             Log.e("MYTAG", "MACTIVITY IS NOT NULL");
@@ -137,6 +143,13 @@ public class NewsPage extends Fragment {
             });
             postCommodity.start();
         }
+
+        //清楚元素内容
+        imageView.setImageResource(android.R.drawable.ic_input_add);
+        name.setText("");
+        price.setText("");
+        goods_type.setText("");
+        describe.setText("");
 
     }
 

@@ -28,7 +28,6 @@ public class PostImage {
             //try里面拿到输出流，输出端就是服务器端
             try (BufferedOutputStream bos = new BufferedOutputStream(connection.getOutputStream())) {
 
-                //我java代码是在Windows上运行的，图片路径就是下面这个
                 InputStream is = new FileInputStream(picFile);
                 Log.e("MYTAG", "fileinputstream成功");
                 BufferedInputStream bis = new BufferedInputStream(is);
