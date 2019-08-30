@@ -83,6 +83,8 @@ public class LoginPage extends AppCompatActivity {
                 Toast.makeText(LoginPage.this,"欢迎，管理员 "+id+"号",Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent(LoginPage.this, HomePage.class);
                 startActivity(intent);
+            }else{
+                Toast.makeText(LoginPage.this,"用户名与密码不符，请重新输入",Toast.LENGTH_SHORT).show();
             }
         }
 

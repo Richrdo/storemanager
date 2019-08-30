@@ -32,6 +32,10 @@ public class HomePage extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static int REQUEST_PERMISSION_CODE = 1;
 
+    private static NewsPage newsPage=new NewsPage();
+    private static CommodityControllerPage commodityControllerPage=new CommodityControllerPage();
+    private static OrderPage orderPage=new OrderPage();
+
 
     private ViewPager mViewPager;
     private RadioGroup mTabRadioGroup;
@@ -67,11 +71,11 @@ public class HomePage extends AppCompatActivity {
         mViewPager=findViewById(R.id.fragment_vp);
         mTabRadioGroup=findViewById(R.id.tabs_rg);
 
-        NewsPage newsPage=new NewsPage();
 
-        fragments=new ArrayList<>(4);
+        fragments=new ArrayList<>(3);
         fragments.add(newsPage);
-        fragments.add(new CommodityControllerPage());
+        fragments.add(commodityControllerPage);
+        fragments.add(orderPage);
 
         adapters=new MyFragmentPageAdapter(getSupportFragmentManager(),fragments);
         mViewPager.setAdapter(adapters);

@@ -45,13 +45,6 @@
             android:drawableTop="@drawable/order_selector"
             android:text="订单" />
 
-        <RadioButton
-            android:id="@+id/rbtn_manager"
-            style="@style/Custom.TabRadioButton"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:drawableTop="@drawable/managers_selector"
-            android:text="管理员" />
 
     </RadioGroup>
 

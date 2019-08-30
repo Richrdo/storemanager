@@ -18,6 +18,7 @@ import android.widget.ListView;
 
 
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.storemanager.R;
 import com.example.storemanager.entity.Commodity;
@@ -33,14 +34,14 @@ import java.util.List;
 
 
 
-public class CommodityControllerPage extends Fragment {
+public class CommodityControllerPage extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private CommodityAdapter adapter;
     private Activity mActivity;
     private ListView listView;
-    private List<Commodity> commodities=null;
-    private Button flash=null;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private SharedPreferences.Editor editor;
+    private LayoutInflater inflater;
 
 
     @Override
@@ -59,26 +60,15 @@ public class CommodityControllerPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_commodity_controller, null, false);
         listView=view.findViewById(R.id.commodity_list_view);
-        flash=view.findViewById(R.id.flash_goods);
+        swipeRefreshLayout=view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        this.inflater=inflater;
 
-
-        flash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initCommmodity(inflater);
-                    }
-                }).start();
-//                flash.setVisibility(View.GONE);
-            }
-        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Commodity commodity=commodities.get(i);
+                Commodity commodity=StoreMap.commodities.get(i);
                 Intent intent=new Intent(mActivity,EditCommodity.class);
                 intent.putExtra("click_commodity",commodity);
                 startActivity(intent);
@@ -99,7 +89,7 @@ public class CommodityControllerPage extends Fragment {
                         }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Commodity commodity=commodities.get(position);
+                                Commodity commodity=StoreMap.commodities.get(position);
                                 Log.e("MYTAG", "你将删除"+commodity.getCommodityName());
                                 deleteItem(commodity);
                             }
@@ -117,8 +107,8 @@ public class CommodityControllerPage extends Fragment {
             @Override
             public void run() {
                 Log.e("MYTAG", "开启getCommodity" );
-               commodities=GetCommodity.initCommodity("http://47.106.177.200:8080/store/get_commodity");
-                GetCommodity.getImage(mActivity,commodities);
+                StoreMap.commodities=GetCommodity.initCommodity("http://47.106.177.200:8080/store/get_commodity");
+                GetCommodity.getImage(mActivity,StoreMap.commodities);
             }
         });
         thread.start();
@@ -133,10 +123,11 @@ public class CommodityControllerPage extends Fragment {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                adapter=new CommodityAdapter(mActivity,commodities);
+                adapter=new CommodityAdapter(mActivity,StoreMap.commodities);
                 listView.setAdapter(adapter);
             }
         });
+
     }
 
     private void deleteItem(Commodity commodity){
@@ -147,7 +138,7 @@ public class CommodityControllerPage extends Fragment {
                 String url="http://47.106.177.200:8080/store/change?action=delete&id="+id;
                 new PostChange().doPost(url);
                 StoreMap.imageMap.remove(id);
-                commodities.remove(commodity);
+                StoreMap.commodities.remove(commodity);
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -165,4 +156,16 @@ public class CommodityControllerPage extends Fragment {
         }
     }
 
+    @Override
+    public void onRefresh() {
+        Log.e("MYTAG", "开始响应下拉刷新事件" );
+        initCommmodity(inflater);
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+            }
+        });
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }
